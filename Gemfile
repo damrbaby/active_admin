@@ -30,6 +30,7 @@ gem 'formtastic',     '>= 1.1.0'
 gem 'will_paginate',  '>= 3.0.pre2'
 gem 'inherited_views'
 gem 'sass',           '>= 3.1.0'
+gem 'orm_adapter',    '>= 0.0.5'
 
 group :development, :test do
   gem 'sqlite3-ruby',   :require => 'sqlite3'
@@ -48,3 +49,4 @@ group :test do
   gem 'shoulda',        '2.11.2',           :require => nil
   gem 'launchy'
 end
+
