@@ -40,8 +40,10 @@ module ActiveAdmin
         run_destroy_callbacks object do
           object.destroy
         end
+      rescue ActiveRecord::ConnectionNotEstablished # hack for mongoid
       end
     end
 
   end
 end
+
