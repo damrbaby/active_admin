@@ -6,14 +6,11 @@ module ActiveAdmin
 
       actions :index
 
-      # Render from here if not overriden
-      self.default_views = 'active_admin_dashboard'
-
       clear_action_items!
 
       def index
         @dashboard_sections = find_sections
-        render_or_default 'index'
+        render 'active_admin/dashboard/index.html.arb'
       end
 
       protected
@@ -37,7 +34,7 @@ module ActiveAdmin
 
       # Return the current menu for the view. This is a helper method
       def current_menu
-        ActiveAdmin.namespaces[namespace].menu
+        ActiveAdmin.application.namespaces[namespace].menu
       end
 
     end

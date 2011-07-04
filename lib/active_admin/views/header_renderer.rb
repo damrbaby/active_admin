@@ -12,10 +12,10 @@ module ActiveAdmin
       protected
 
       def title
-        content_tag 'h1', ActiveAdmin.site_title, :id => 'site_title'
+        content_tag 'h1', active_admin_application.site_title, :id => 'site_title'
       end
 
-      # Renders the global navigation returned by 
+      # Renders the global navigation returned by
       # ActiveAdmin::ResourceController#current_menu
       #
       # It uses the ActiveAdmin.tabs_renderer option
@@ -27,7 +27,7 @@ module ActiveAdmin
         content_tag 'p', :id => "utility_nav" do
           if current_active_admin_user?
             content_tag(:span, display_name(current_active_admin_user), :class => "current_user") +
-              link_to("Logout", "/#{ActiveAdmin.default_namespace}/logout")
+              link_to(I18n.t('active_admin.logout'), "/#{active_admin_application.default_namespace}/logout")
           end
         end
       end

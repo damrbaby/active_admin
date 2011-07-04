@@ -2,8 +2,14 @@ require 'spec_helper'
 
 describe ActiveAdmin::Namespace do
 
+  let(:application){ ActiveAdmin::Application.new }
+
   context "when new" do
-    let(:namespace){ ActiveAdmin::Namespace.new(:admin) }
+    let(:namespace){ ActiveAdmin::Namespace.new(application, :admin) }
+
+    it "should have an application instance" do
+      namespace.application.should == application
+    end
 
     it "should have a name" do
       namespace.name.should == :admin
@@ -20,7 +26,7 @@ describe ActiveAdmin::Namespace do
 
   describe "registering a resource" do
 
-    let(:namespace){ ActiveAdmin::Namespace.new(:admin) }
+    let(:namespace){ ActiveAdmin::Namespace.new(application, :admin) }
 
     context "with no configuration" do
       before do
@@ -74,7 +80,7 @@ describe ActiveAdmin::Namespace do
     end
 
     describe "finding resource instances" do
-      let(:namespace){ ActiveAdmin::Namespace.new(:admin) }
+      let(:namespace){ ActiveAdmin::Namespace.new(application, :admin) }
       context "when registered" do
         before do
           @post_resource = namespace.register Post
@@ -118,8 +124,40 @@ describe ActiveAdmin::Namespace do
       end
 
       describe "disabling the menu" do
-        # TODO
-        it "should not create a menu item"
+        before do
+          namespace.register Category do
+            menu false
+          end
+          namespace.load_menu!
+        end
+        it "should not create a menu item" do
+          namespace.menu["Categories"].should be_nil
+        end
+      end
+      
+      describe "setting menu priority" do
+        before do
+          namespace.register Category do
+            menu :priority => 2
+          end
+          namespace.load_menu!
+        end
+        it "should have a custom priority of 2" do
+          namespace.menu["Categories"].priority.should == 2
+        end
+      end
+      
+      describe "setting a condition for displaying" do
+        before do
+          namespace.register Category do
+            menu :if => proc { false }
+          end
+          namespace.load_menu!
+        end
+        it "should have a proc returning false" do
+          namespace.menu["Categories"].display_if_block.should be_instance_of(Proc)
+          namespace.menu["Categories"].display_if_block.call.should == false
+        end
       end
 
       describe "adding as a belongs to" do
@@ -149,13 +187,13 @@ describe ActiveAdmin::Namespace do
     describe "dashboard controller name" do
       context "when namespaced" do
         it "should be namespaced" do
-          namespace = ActiveAdmin::Namespace.new(:admin)
+          namespace = ActiveAdmin::Namespace.new(application, :admin)
           namespace.dashboard_controller_name.should == "Admin::DashboardController"
         end
       end
       context "when not namespaced" do
         it "should not be namespaced" do
-          namespace = ActiveAdmin::Namespace.new(:root)
+          namespace = ActiveAdmin::Namespace.new(application, :root)
           namespace.dashboard_controller_name.should == "DashboardController"
         end
       end

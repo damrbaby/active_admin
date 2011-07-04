@@ -28,9 +28,10 @@ module ActiveAdmin
 
     RegisterEvent = 'active_admin.namespace.register'.freeze
 
-    attr_reader :resources, :name, :menu
+    attr_reader :application, :resources, :name, :menu
 
-    def initialize(name)
+    def initialize(application, name)
+      @application = application
       @name = name.to_s.underscore.to_sym
       @resources = {}
       @menu = Menu.new
@@ -190,7 +191,7 @@ module ActiveAdmin
         # Update the url if it's already been created
         add_to[config.menu_item_name].url = config.route_collection_path
       else
-        add_to.add(config.menu_item_name, config.route_collection_path)
+        add_to.add(config.menu_item_name, config.route_collection_path, config.menu_item_priority, { :if => config.menu_item_display_if })
       end
     end
   end

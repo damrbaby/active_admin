@@ -16,16 +16,17 @@ module ActiveAdmin
         def add_classes_to_body
           @body.add_class(params[:action])
           @body.add_class(params[:controller].gsub('/', '_'))
+          @body.add_class("logged_in")
         end
 
         def build_active_admin_head
           within @head do
             meta :"http-equiv" => "Content-type", :content => "text/html; charset=utf-8"
-            insert_tag Arbre::HTML::Title, [title, ActiveAdmin.site_title].join(" | ")
-            ActiveAdmin.stylesheets.each do |path|
+            insert_tag Arbre::HTML::Title, [title, active_admin_application.site_title].join(" | ")
+            active_admin_application.stylesheets.each do |path|
               link :href => stylesheet_path(path), :media => "screen", :rel => "stylesheet", :type => "text/css"
             end
-            ActiveAdmin.javascripts.each do |path|
+            active_admin_application.javascripts.each do |path|
               script :src => javascript_path(path), :type => "text/javascript"
             end
             text_node csrf_meta_tag
@@ -78,8 +79,8 @@ module ActiveAdmin
         end
 
         def build_page_content
+          build_flash_messages
           div :id => "active_admin_content", :class => (skip_sidebar? ? "without_sidebar" : "with_sidebar") do
-            build_flash_messages
             build_main_content_wrapper
             build_sidebar
           end
@@ -104,7 +105,7 @@ module ActiveAdmin
         end
 
         def main_content
-          "Please implement #{self.class.name}#main_content to display content.".html_safe
+          I18n.t('active_admin.main_content', :model => self.class.name).html_safe
         end
 
         def title
