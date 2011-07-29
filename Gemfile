@@ -22,6 +22,8 @@ group :development, :test do
   gem 'sqlite3-ruby',   :require => 'sqlite3'
   gem 'rake',           '0.8.7', :require => false
   gem 'haml',           '~> 3.1.1', :require => false
+  gem 'yard'
+  gem 'rdiscount' # For yard
 end
 
 group :test do
@@ -33,4 +35,5 @@ group :test do
   gem 'database_cleaner'
   gem 'shoulda',        '2.11.2',           :require => nil
   gem 'launchy'
+  gem 'jslint_on_rails',    '~> 1.0.6'
 end

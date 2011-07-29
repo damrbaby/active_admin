@@ -1,6 +1,8 @@
-require 'active_admin/resource/naming'
+require 'active_admin/resource/action_items'
 require 'active_admin/resource/menu'
+require 'active_admin/resource/naming'
 require 'active_admin/resource/scopes'
+require 'active_admin/resource/sidebars'
 
 module ActiveAdmin
 
@@ -50,18 +52,24 @@ module ActiveAdmin
     # Set the configuration for the CSV
     attr_writer :csv_builder
 
-    def initialize(namespace, resource, options = {})
-      @namespace = namespace
-      @resource = resource
-      @options = default_options.merge(options)
-      @sort_order = @options[:sort_order]
-      @page_configs = {}
-      @member_actions, @collection_actions = [], []
+    module Base
+      def initialize(namespace, resource, options = {})
+        @namespace = namespace
+        @resource = resource
+        @options = default_options.merge(options)
+        @sort_order = @options[:sort_order]
+        @page_configs = {}
+        @member_actions, @collection_actions = [], []
+      end
     end
 
-    include Naming
+    include Base
+    include ActionItems
     include Menu
+    include Naming
     include Scopes
+    include Sidebars
+
 
     def resource_table_name
       resource.quoted_table_name
@@ -132,7 +140,7 @@ module ActiveAdmin
     def default_options
       {
         :namespace  => ActiveAdmin.application.default_namespace,
-        :sort_order => ActiveAdmin.application.default_sort_order
+        :sort_order => "#{resource.respond_to?(:primary_key) ? resource.primary_key : 'id'}_desc"
       }
     end
 
