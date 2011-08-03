@@ -1,4 +1,4 @@
-require 'meta_search'
+# require 'meta_search'
 require 'devise'
 require 'kaminari'
 require 'sass'
@@ -72,3 +72,4 @@ module ActiveAdmin
 end
 
 require 'active_admin/comments'
+
