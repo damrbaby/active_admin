@@ -6,6 +6,7 @@ module ActiveAdmin
 
       # Takes a ActiveAdmin::Sidebar::Section instance
       def build(section)
+        return if !call_method_or_proc_on(self, section.display_if_block)
         @section = section
         super(@section.title, :icon => @section.icon)
         self.id = @section.id
@@ -26,3 +27,4 @@ module ActiveAdmin
 
   end
 end
+

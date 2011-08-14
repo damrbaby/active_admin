@@ -1,5 +1,5 @@
 module ActiveAdmin
-  
+
   # Shareable module to give a #display_on?(action) method
   # which returns true or false depending on an options hash.
   #
@@ -15,9 +15,17 @@ module ActiveAdmin
 
   module OptionalDisplay
     def display_on?(action)
+      if @options[:if]
+        @display_if_block = @options[:if]
+      end
+
       return @options[:only].include?(action.to_sym) if @options[:only]
       return !@options[:except].include?(action.to_sym) if @options[:except]
       true
+    end
+
+    def display_if_block
+      @display_if_block || lambda { |_| true }
     end
 
     private
@@ -32,3 +40,4 @@ module ActiveAdmin
     end
   end
 end
+
