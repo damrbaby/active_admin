@@ -4,7 +4,7 @@ $LOAD_PATH << File.expand_path('../support', __FILE__)
 ENV['BUNDLE_GEMFILE'] = File.expand_path('../../Gemfile', __FILE__)
 
 require 'detect_rails_version'
-ENV['RAILS'] ||= detect_rails_version
+ENV['RAILS'] = detect_rails_version
 
 require "bundler"
 Bundler.setup
@@ -58,6 +58,16 @@ module ActiveAdminIntegrationSpecHelper
       render_views  
       # metadata[:behaviour][:describes] = ActiveAdmin.namespaces[:admin].resources['Post'].controller
       module_eval &block
+    end
+  end
+
+  # Sets up an Arbre::Builder context
+  def setup_arbre_context!
+    include Arbre::Builder
+    let(:assigns){ {} }
+    let(:helpers){ mock_action_view }
+    before do
+      @_helpers = helpers
     end
   end
 
