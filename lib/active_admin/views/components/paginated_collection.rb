@@ -42,8 +42,8 @@ module ActiveAdmin
         unless collection.respond_to?(:num_pages)
           raise(StandardError, "Collection is not a paginated scope. Set collection.page(params[:page]).per(10) before calling :paginated_collection.")
         end
-        
-      
+
+
         @contents = div(:class => "paginated_collection_contents")
         build_pagination_with_formats(options)
         @built = true
@@ -110,9 +110,9 @@ module ActiveAdmin
           else;   I18n.t('active_admin.pagination.one_page', :model => entries_name, :n => collection.size)
           end
         else
-          offset = collection.current_page * collection.size
+          offset = collection.limit_value + collection.offset_value
           total  = collection.total_count
-          I18n.t('active_admin.pagination.multiple', :model => entries_name, :from => (offset - collection.size + 1), :to => offset > total ? total : offset, :total => total)
+          I18n.t('active_admin.pagination.multiple', :model => entries_name, :from => (collection.offset_value + 1), :to => offset > total ? total : offset, :total => total)
         end
       end
 

@@ -131,7 +131,7 @@ module ActiveAdmin
       # Include all the Modules. BaseCollection must be first
       # and pagination should be last
       include BaseCollection
-      #include Sorting
+      include Sorting
       #include Search
       include Scoping
       include Pagination
